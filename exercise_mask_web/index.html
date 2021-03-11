@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Mask Datas</title>
+        <meta name="description" content="A test website for learning php web, css, html">
+        <style>
+        table {
+        width:100%;
+        }
+        table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        }
+        th, td {
+        padding: 15px;
+        }
+        #t01 tr:nth-child(even) {
+        background-color: #eee;
+        }
+        #t01 tr:nth-child(odd) {
+        background-color: #fff;
+        }
+        #t01 th {
+        background-color: black;
+        color: white;
+        }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    
+    <body>
+        <form>
+            Enter Search Query: 
+            <input id="search" type="text" size="30""/>
+            <br><br> 
+        </form>
+        <table id="t01">            
+        </table>
+       <script type="text/javascript">
+            var keyinTime;//此為需要事先定義要記錄的定時器
+			$("#search").keyup(function(){
+                clearTimeout(keyinTime);//要清掉正在計時的事件，要不然會多重運行
+                keyinTime = setTimeout(function(){
+                    $.ajax({
+                        url:'masktask_web.php',
+                        type:'post',
+                        data:{"streetname":$("#search").val()},   //拼裝json陣列
+                        dataType:"JSON",
+                        success:function(msg){   
+                            if(msg) {
+                                $("#t01").empty();
+                                console.log(msg);
+                                for (var i = 0; i < msg.length; i++)
+                                {
+                                    
+                                    $("#t01").append(function(){
+                                        var context = "<tr>";
+                                        if(i === 0){
+                                            for (var j = 0; j < msg[i].length; j++)
+                                            {
+                                                context += "<th>"+msg[i][j]+"</th>";
+                                            }
+                                        }else{
+                                            for (var j = 0; j < msg[i].length; j++)
+                                            {
+                                                context += "<td>"+msg[i][j]+"</td>";
+                                            }
+                                        }
+                                        
+                                        context += "</tr>";
+
+                                        return context;
+                                    });
+                                    
+                                }
+                            }
+                            else {
+                                alert("輸入異常!");
+                            }
+                        },
+                        error:function(e){  
+                            console.log("ERROR : "+ e.error); 
+                        }
+                    });
+
+                }, 800);//秒數就看你要定義多久才運行，一般理想是800~1500的值。
+			});
+            
+       </script> 
+    </body>
+</html>
