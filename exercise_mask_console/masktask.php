@@ -2,7 +2,7 @@
 
 use League\CLImate\CLImate;
 
-require("vendor/autoload.php");
+require("../vendor/autoload.php");
 class Mask
 {
     protected $maskDatas;
